@@ -43,23 +43,12 @@ class Doctor:
             return int(round(offer / 1000) * 1000)
 
     @staticmethod
-    def propose_swap(box, game, remaining):
+    def propose_swap():
         """
         Propone al concorrente di scambiare il suo pacco con un pacco a scelta tra i rimanenti.
-        Ritorna il pacco selezionato se l'utente accetta, altrimenti ritorna il pacco attuale.
         """
-        possible = list(remaining)
         decision = input('Il dottore propone di scambiare il tuo pacco.\nAccetti lo scambio? (S/N)').strip().lower()
-        if decision.startswith('s'):
-            try:
-                choice = int(input(f'Scegli un pacco tra i rimanenti: {remaining} '))
-                game.choose(choice)
-                return choice
-            except ValueError:
-                print('Input inserito non valido - scambio annullato')
-        else:
-                print('Hai rifiutato lo scambio')
-                return box
+
 
 
 
