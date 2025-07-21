@@ -1,3 +1,4 @@
+from doctor import Doctor
 
 class Player:
     """
@@ -21,12 +22,15 @@ class Player:
                 print('Inserisci un numero valido  (da 1 a 20)')
 
     def decide(self, propose, amount=None, remaining=None):
+        """
+        Definisce la decisione presa dal giocatore in risposta all'offerta del dottore.
+        """
         if propose == 'offer':
             decision = input(f'Il dottore ti offre: {amount} €.\nAccetti? (s/n)\n').strip().lower()
             self.accepted_offer = decision.startswith('s')
             return self.accepted_offer
         if propose == 'swap':
-            decision = input('Il dottore ti offre di scambiare il tuo pacco con uno dei rimanenti.\nAccetti? (s/n)\n').strip().lower()
+            decision = input(Doctor.propose_swap()).strip().lower()
             if decision.startswith('s'):
                 while True:
                     try:

@@ -1,4 +1,7 @@
 import numpy as np
+import logging
+
+
 
 class Doctor:
     """
@@ -7,7 +10,7 @@ class Doctor:
     -> i metodi di questa classe sono tutti statici
     """
     @staticmethod
-    def make_offer(remaining, player_box, recent):
+    def make_offer(remaining, player_box, cur_turn, recent):
         """
         Definisce l'azione del dottore di fare un'offerta al concorrente.
         La base considerata è la metà della media dei pacchi rimanenti,
@@ -34,13 +37,22 @@ class Doctor:
         std = np.std(remaining)
         if std/medium_value > 0:
             offer *= (1 + std/medium_value)
+        # quarta considerazione: mi sono accorto testando che venivano fuori offerte troppo alte e irrealistiche,
+        # quindi introduco un quarto fattore, basato sul rapporto tra il turno corrente e il totale dei turni.
+        # Probabilmente è sbagliato, ma le offerte hanno più senso
+        offer *= (0.1 + (cur_turn / 19))
         # OFFERTA FINALE - arrotonda l'offerta al multiplo di 500 più vicino
         if offer < 1000:
-            return int(round(offer/250)*250)
+            offer = int(round(offer/250)*250)
+            return offer
         elif offer < 10000:
-            return int(round(offer/500) * 500)
+            offer = int(round(offer / 500) * 500)
+            logging.info(f'Turno {cur_turn} - offerta: {offer} EUR')
+            return offer
         else:
-            return int(round(offer/1000) * 1000)
+            offer = int(round(offer/1000) * 1000)
+            logging.info(f'Turno {cur_turn} - offerta: {offer} EUR')
+            return offer
 
     @staticmethod
     def propose_swap():
@@ -58,18 +70,16 @@ class Doctor:
         mean = np.mean(remaining)
         ratio = std/mean if mean > 0 else 0
         shots = 0
-        if ratio < 0.5:
+        if ratio < 1.0:
             shots = 1
-        elif 0.5 < ratio < 1.0:
-            shots = 2
         elif 1.0 < ratio > 1.5:
-            shots = 3
+            shots = 2
         elif 1.5 < ratio < 1.7:
-            shots = 4
+            shots = 3
         elif 1.7 < ratio < 2.0:
-            shots = 5
+            shots = 4
         else:
-            shots = 6
+            shots = 5
         if player_box < mean:
             shots += 1
         max_shots_allowed = len(remaining) - 2

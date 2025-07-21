@@ -11,7 +11,7 @@ class Game:
         Inizializza la partita.
         Viene eseguita un'assegnazione casuale dei montepremi ai pacchi numerati, mappati in un dizionario.
         Viene creato un set di pacchi rimanenti.
-        Vengono create delle liste che conterranno i pacchi aperti, uno storico dei premi già usciti e uno storico di offerte del dottore.
+        Vengono create delle liste che conterranno: i pacchi aperti, uno storico dei premi già usciti e uno storico di offerte del dottore.
         """
         self.prizes = [0, 1, 5, 10, 20, 50, 75, 100, 200, 500,
                        5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 200000, 300000]
@@ -27,23 +27,19 @@ class Game:
         """
         Definisce l'azione di scegliere un pacco.
         """
-        try:
-            self.player_box = box
-            self.remaining.remove(box)
-        except ValueError:
-            print('Scelta non valida, il pacco non è selezionabile')
+        if box not in self.remaining:
+            raise ValueError('Pacco già scelto o non valido.')
+        self.player_box = box
+        self.remaining.remove(box)
+
 
     def open_box(self, box):
         """
         Definisce l'azione di apertura di un pacco, tornandone il valore.
         """
-        value = 0
-        try:
-            value = self.boxes[box]
-            self.remaining.remove(box)
-            self.opened.append(box)
-        except ValueError:
-            print('Scelta non valida, il pacco non è selezionabile')
+        value = self.boxes[box]
+        self.remaining.remove(box)
+        self.opened.append(box)
         return value
 
     def get_remaining(self):
@@ -67,7 +63,7 @@ class Game:
         """
         self.offer_history.append({
             'turn': turn,
-            'type': 'money' if type(offer) == int else 'swap',
+            'type': 'offerta' if type(offer) == int else 'cambio',
             'value': offer,
             'accepted': status
         })
