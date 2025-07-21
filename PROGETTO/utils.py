@@ -31,8 +31,8 @@ def play_turn(game, player, n_turn, turns, recent_values):
                         recent_values.append(value)
                         print(f'Il pacco n. {box} conteneva: {value} €')
                         game.update_box_history()
-                        n_turn += 1
                         logging.info(f'Turno {n_turn} - Valore pacco {box}: {value} EUR')
+                        n_turn += 1
                         break
                     else:
                         print('Pacco non disponibile')

@@ -1,6 +1,5 @@
 import random
 import numpy as np
-from doctor import Doctor
 
 class Game:
     """
