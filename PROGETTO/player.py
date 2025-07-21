@@ -1,5 +1,3 @@
-from game import Game
-from doctor import Doctor
 
 class Player:
     """
@@ -13,7 +11,7 @@ class Player:
     def choose(self, available):
         while True:
             try:
-                box = int(input(f'Seleziona il tuo pacco tra i seguenti: {sorted(available)}'))
+                box = int(input(f'Seleziona il tuo pacco tra i seguenti:\n{sorted(available)}\n'))
                 if box in available:
                     self.box = box
                     return box
@@ -24,15 +22,15 @@ class Player:
 
     def decide(self, propose, amount=None, remaining=None):
         if propose == 'offer':
-            decision = input(f'Il dottore ti offre: {amount} €. Accetti? (s/n)').strip().lower()
+            decision = input(f'Il dottore ti offre: {amount} €.\nAccetti? (s/n)\n').strip().lower()
             self.accepted_offer = decision.startswith('s')
             return self.accepted_offer
         if propose == 'swap':
-            decision = input('Il dottore ti offre di scambiare il tuo pacco con uno dei rimanenti. Accetti? (s/n').strip().lower()
+            decision = input('Il dottore ti offre di scambiare il tuo pacco con uno dei rimanenti.\nAccetti? (s/n)\n').strip().lower()
             if decision.startswith('s'):
                 while True:
                     try:
-                        choice = int(input(f'Scegli un pacco: {sorted(remaining)}: '))
+                        choice = int(input(f'Scegli un pacco:\n{sorted(remaining)}\n'))
                         if choice in remaining:
                             return choice
                         else:
@@ -42,3 +40,5 @@ class Player:
             else:
                 print('Hai rifiutato lo scambio.')
                 return None
+
+
