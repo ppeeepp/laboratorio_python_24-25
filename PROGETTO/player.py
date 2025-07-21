@@ -19,7 +19,7 @@ class Player:
                 else:
                     print('Pacco non disponibile, selezionane un altro')
             except ValueError:
-                print('Inserisci un numero valido  (da 1 a 20)')
+                print('Inserisci un numero valido (da 1 a 20)')
 
     def decide(self, propose, amount=None, remaining=None):
         """

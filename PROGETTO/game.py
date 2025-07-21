@@ -32,7 +32,6 @@ class Game:
         self.player_box = box
         self.remaining.remove(box)
 
-
     def open_box(self, box):
         """
         Definisce l'azione di apertura di un pacco, tornandone il valore.

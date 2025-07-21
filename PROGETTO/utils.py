@@ -1,5 +1,4 @@
 from doctor import Doctor
-import main
 import logging
 """
 File con tutte le funzionalità utili che vengono chiamate nel main

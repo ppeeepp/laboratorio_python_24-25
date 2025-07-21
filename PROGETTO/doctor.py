@@ -1,8 +1,6 @@
 import numpy as np
 import logging
 
-
-
 class Doctor:
     """
     Classe che rappresenta il Dottore e ne definisce la logica
