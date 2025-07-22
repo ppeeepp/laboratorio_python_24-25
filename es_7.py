@@ -46,7 +46,7 @@ class IntegrazioneFunzioni:
         self.max_points = max_points
         # inizializzo anche il n di iterazioni e di campionamenti per tenerne traccia
         self.n_iterazioni = 0
-        self.l_campionamenti = []
+        self.l_campionamenti = []       # lista che conterrà tuple (x, f(x)), calcolate ad ogni iterazione
     # punti 1), 2), 3), 4)
     def calc_integ(self):
         """
@@ -77,9 +77,12 @@ class IntegrazioneFunzioni:
         3. dopo l'ultima iterazione.
         """
         fig, axes = plt.subplots()
-        for i in [0, len(self.l_campionamenti)//2, len(self.l_campionamenti)-1]:
-            x,y = self.l_campionamenti[i]
-            axes.plot(x, y, label=f'Punti: {len(x)}')
+        colors = ['red', 'green', 'blue']
+        labels = ['inizio', 'metà', 'fine']
+        instants = [0, len(self.l_campionamenti)//2, len(self.l_campionamenti)-1]
+        for i, color, label in zip(instants, colors, labels):
+            x,y = self.l_campionamenti[i]       # REMIND: ogni elemento [i] è una tupla (x, y)
+            axes.plot(x, y, label=f'{label} - punti: {len(x)}')
         axes.set_title('Funzione campionata in 3 momenti - INIZIO, METÀ, FINE')
         axes.set_xlabel('x')
         axes.set_ylabel('f(x)')
@@ -91,7 +94,8 @@ class IntegrazioneFunzioni:
     def plot_over_soglia(self):
         """
         Metodo che crea un grafico della funzione solo nei punti in cui essa supera una certa soglia y.
-        Per farlo utilizza solo l'ultimo campionamento e mostra solo la porzione di curva in cui si va al di sopra della soglia.
+        Per farlo utilizza solo l'ultimo campionamento e mostra solo la porzione di curva
+        in cui si va al di sopra della soglia.
         """
         x, f_x = self.l_campionamenti[-1]   # considero solo l'ultimo campionamento
         fig, axes = plt.subplots()
@@ -143,12 +147,12 @@ def menu():
     return f
 
 def main():
-    a = float(input('Inserisci il limite inferiore dell\'intervallo '))
-    b = float(input('Inserisci il limite superiore dell\'intervallo '))
+    a = float(input('Inserisci il limite inferiore dell\'intervallo: '))
+    b = float(input('Inserisci il limite superiore dell\'intervallo: '))
     interval = (a,b)
-    max_approx = float(input('Scegli il valore di approssimazione massima '))
-    soglia = float(input('Inserisci il valore della soglia di y per il grafico '))
-    max_points = int(input('Inserisci il numero di punti per il campionamento iniziale (MINIMO = 10) '))
+    max_approx = float(input('Scegli il valore di approssimazione massima: '))
+    soglia = float(input('Inserisci il valore della soglia di y per il grafico: '))
+    max_points = int(input('Inserisci il numero di punti per il campionamento iniziale (MINIMO = 10): '))
     if max_points < 10:
         max_points = 10
     f = menu()

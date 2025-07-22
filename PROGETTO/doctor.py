@@ -57,7 +57,7 @@ class Doctor:
         """
         Propone al concorrente di scambiare il suo pacco con un pacco a scelta tra i rimanenti.
         """
-        return 'Il dottore propone di scambiare il tuo pacco.\nAccetti lo scambio? (S/N)\n'
+        return 'Il dottore propone di scambiare il tuo pacco.\nAccetti lo scambio? (S/N) o (1/2)\n'
 
     @staticmethod
     def get_turn_count(player_box, remaining):

@@ -1,5 +1,8 @@
 from doctor import Doctor
 import logging
+from game import Game
+import matplotlib.pyplot as plt
+
 """
 File con tutte le funzionalità utili che vengono chiamate nel main
 """
@@ -18,7 +21,7 @@ def play_turn(game, player, n_turn, turns, recent_values):
             break
 
         print(f'-------\nTURNO {n_turn}\n-------')
-        while True:
+        while len(game.remaining) > 2:
             print(f'Pacchi rimasti: {sorted(game.remaining)}')
             print(f'Montepremi rimasti: {sorted(game.get_remaining())}')
             action = input(
@@ -31,8 +34,8 @@ def play_turn(game, player, n_turn, turns, recent_values):
                         recent_values.append(value)
                         print(f'Il pacco n. {box} conteneva: {value} €')
                         game.update_box_history()
+                        game.player_box_history.append(game.boxes[player.box])
                         logging.info(f'Turno {n_turn} - Valore pacco {box}: {value} EUR')
-                        n_turn += 1
                         break
                     else:
                         print('Pacco non disponibile')
@@ -45,11 +48,12 @@ def play_turn(game, player, n_turn, turns, recent_values):
                 else:
                     print('Storico offerte:')
                     for offer in game.offer_history:
-                        description = f'{offer['type'].upper()} - {offer['value']} - {'ACCETTATA' if offer['accepted'] else 'RIFIUTATA'}'
+                        description = f'{offer['type'].upper()} - {'EUR'if type(offer['value'])==int else None} {offer['value'] if type(offer['value'])==int else 'CAMBIO'} - {'ACCETTATA' if offer['accepted'] else 'RIFIUTATA'}'
                         print(f'Turno {offer['turn']}: {description}')
             else:
                 print('Scelta non valida. Seleziona [1] o [2]')
-    return n_turn
+        n_turn += 1
+    return n_turn, game.boxes[player.box]
 
 def handle_offer(game, player, player_box, recent_values, cur_turn, random_gen):
     """
@@ -59,22 +63,51 @@ def handle_offer(game, player, player_box, recent_values, cur_turn, random_gen):
     remaining = game.get_remaining()
     turn_count = Doctor.get_turn_count(player_box, remaining)
     print(f'PROPOSTA - Il Dottore ti fa aprire {turn_count} pacchi se non accetti la seguente proposta:')
-    offer_type = random_gen.choice(['offer']*2 + ['swap'])  # nei test notavo che il dottore offriva troppe volte il cambio.
-                                                            # Per renderlo più realistico ho aumentato le probabilità dell'offerta economica: 2/3 offerta, 1/3 scambio.
+    offer_type = random_gen.choice(['offer']*3 + ['swap'])  # nei test notavo che il dottore offriva troppe volte il cambio.
+                                                            # Per renderlo più realistico ho aumentato le probabilità dell'offerta economica: 3/4 offerta, 1/4 scambio.
     if offer_type == 'offer':
         offer = Doctor.make_offer(remaining, game.boxes[player.box], cur_turn, recent_values)
         accepted = player.decide(propose='offer', amount=offer)
-        game.update_offer_history(turn=cur_turn, offer=offer, status=accepted)
+        game.update_offer_history(turn=cur_turn-1, offer=offer, status=accepted)    # cur_turn-1 perchè è stato incrementato da in play_turn
         if accepted:
             print(f'Hai accettato l\'offerta di {offer} €!')
             player.final_gain = offer
             return True, 0  # fine del gioco
+        elif not accepted:
+            print('Hai rifiutato l\'offerta')
+            return False, turn_count
     else:
         accepted_swap = player.decide(propose='swap', remaining=game.remaining)
-        game.update_offer_history(turn=cur_turn, offer='swap', status=bool(accepted_swap))
+        game.update_offer_history(turn=cur_turn-1, offer='swap', status=bool(accepted_swap))
         if accepted_swap:
             game.remaining.add(player.box)  # rimette il vecchio pacco nel set
+            game.player_box_history.append(game.boxes[game.player_box])
             game.choose(accepted_swap)
             player.box = accepted_swap
             print(f'Hai scambiato il tuo pacco con il pacco n. {accepted_swap}')
     return False, turn_count
+
+def get_game_plot(box_values, mean, offers):
+    """
+    Fornisce un grafico dell'andamento della partita.
+    i 3 dati mostrati saranno:
+    - il valore del pacco del concorrente       <- input: box_values = lista dei valori del pacco del concorrente per turno
+    - l'andamento del valor medio dei pacchi    <- input: mean
+    - l'andamento delle offerte del dottore     <- input: offers
+    L'asse x rappresenta l'andamento temporale della partita: numero di tiri, dal primo al 19esimo.
+    """
+    min_len = min(len(mean), len(box_values))               # per evitare incongruenze negli input, trovo il minimo dei punti comuni a tutti i grafici
+                                                            # quando verrà chiamato, verrà effettuato lo slicing
+    n_turns = list(range(1, min_len+1))                     # preparazione dell'asse x --> min_len+1 perchè se no si ferma a 18
+    offer_turns = [offer['turn'] for offer in offers]       # estrazione dei dati delle offerte
+    offer_values = [offer['value'] for offer in offers]
+    fig, graph = plt.subplots(nrows=1, ncols=1)
+    graph.plot(n_turns, box_values[:min_len], label='Valore pacco concorrente', linestyle='--', color='orange')
+    graph.plot(n_turns, mean[:min_len], label='Valor medio dei pacchi', color='green')
+    graph.plot(offer_turns, offer_values, label='Offerte del dottore', linestyle='--', color='blue', marker='+')
+    graph.set_xlabel('Turni')
+    graph.set_ylabel('EUR')
+    graph.legend()
+    graph.grid(True)
+    plt.show()
+

@@ -21,6 +21,7 @@ class Game:
         self.box_history = []
         self.offer_history = []     # sarà una lista di dizionari contenenti il tipo di offerta e il valore
         self.player_box = None
+        self.player_box_history = []
 
     def choose(self, box):
         """
@@ -30,6 +31,7 @@ class Game:
             raise ValueError('Pacco già scelto o non valido.')
         self.player_box = box
         self.remaining.remove(box)
+        self.player_box_history.append(self.boxes[self.player_box])
 
     def open_box(self, box):
         """
