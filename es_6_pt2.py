@@ -19,7 +19,7 @@ if __name__ == '__main__':
         main_menu()
         user_input = input('Seleziona un\'azione da effettuare. ').upper()
         match user_input:
-            case 'APRI' | '1':
+            case 'APRI' | '1':          # OR
                 filepath = input('Inserisci il percorso del file, in formato .json o .txt ').strip()
                 if filepath.endswith('.json'):
                     rubrica = Rubrica.open_json(filepath)
@@ -27,7 +27,7 @@ if __name__ == '__main__':
                     rubrica = Rubrica.open_txt(filepath)
                 else:
                     print('Formato non supportato.')
-            case 'AGGIUNGI' | '2':
+            case 'AGGIUNGI' | '2':      # OR
                 if not rubrica:
                     print('Prima apri una rubrica.')
                     continue

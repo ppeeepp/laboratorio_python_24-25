@@ -32,23 +32,32 @@ def esponenziale(x, a):
     return np.exp(a*x)
 
 class IntegrazioneFunzioni:
-    # parametri che mi servono: funzione, intervallo, numero punti massimo (con default), soglia y, approssimazione massima
+    """
+    Classe per definire l'integrazione iterativa di una funzione.
+    I parametri per inizializzare un oggetto di questa classe sono:
+    funzione, intervallo, numero massimo di punti, soglia y, approssimazione massima.
+    Tiene anche traccia del numero di iterazioni effettuate e dei campionamenti, che serviranno dopo.
+    """
     def __init__(self, f, interval, max_approx, soglia, max_points=10):
         self.f = f
         self.interval = interval
         self.max_approx = max_approx
         self.soglia = soglia
         self.max_points = max_points
-        # inizializzo anche il n di iterazioni e di campionamenti
+        # inizializzo anche il n di iterazioni e di campionamenti per tenerne traccia
         self.n_iterazioni = 0
         self.l_campionamenti = []
     # punti 1), 2), 3), 4)
     def calc_integ(self):
+        """
+        Metodo che calcola iterativamente l'integrale della funzione, partendo da un certo numero di punti per il campionamento.
+        In ogni iterazione, calcola l'integrale con quel numero di punti e salva il campionamento, per poi aumentare il numero di punti da campionare.
+        Si ferma se la differenza tra il valore ottenuto e quello precedente è minore di un certo valore di approssimazione
+        """
         a, b = self.interval
         points = self.max_points
         prev_value = 0
         value = 0
-
         while prev_value == 0 or abs(value - prev_value) > self.max_approx:
             x = np.linspace(a, b, points)
             f_x = self.f(x)
@@ -57,11 +66,16 @@ class IntegrazioneFunzioni:
             prev_value = value
             self.n_iterazioni += 1
             points += 10
-
         return value, self.n_iterazioni
 
     # punto 5)
     def plot_3_moments(self):
+        """
+        Metodo che crea un grafico della funzione in 3 momenti del campionamento:
+        1. alla prima iterazione,
+        2. a metà delle iterazioni totali,
+        3. dopo l'ultima iterazione.
+        """
         fig, axes = plt.subplots()
         for i in [0, len(self.l_campionamenti)//2, len(self.l_campionamenti)-1]:
             x,y = self.l_campionamenti[i]
@@ -75,6 +89,10 @@ class IntegrazioneFunzioni:
 
     # punto 6)
     def plot_over_soglia(self):
+        """
+        Metodo che crea un grafico della funzione solo nei punti in cui essa supera una certa soglia y.
+        Per farlo utilizza solo l'ultimo campionamento e mostra solo la porzione di curva in cui si va al di sopra della soglia.
+        """
         x, f_x = self.l_campionamenti[-1]   # considero solo l'ultimo campionamento
         fig, axes = plt.subplots()
         x_over = []                         # creo due liste in cui i valori x e f(x) sono > soglia
@@ -93,6 +111,9 @@ class IntegrazioneFunzioni:
         plt.show()
 
 def menu():
+    """
+    Menù interattivo che permette all'utente di selezionare una funzione da integrare e definirne i parametri.
+    """
     print('Scegli la funzione da integrare:\n'
     '1 - Profilo Gaussiano\n'
     '2 - Retta (f(x)=mx+q)\n'

@@ -19,7 +19,7 @@ class Game:
         self.remaining = set(self.boxes.keys())
         self.opened = []
         self.box_history = []
-        self.offer_history = []
+        self.offer_history = []     # sarà una lista di dizionari contenenti il tipo di offerta e il valore
         self.player_box = None
 
     def choose(self, box):
