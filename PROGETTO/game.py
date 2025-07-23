@@ -64,7 +64,7 @@ class Game:
         self.offer_history.append({
             'turn': turn,
             'type': 'offerta' if type(offer) == int else 'cambio',
-            'value': offer,
+            'value': int(offer),
             'accepted': status
         })
 

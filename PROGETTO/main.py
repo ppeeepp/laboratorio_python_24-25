@@ -46,7 +46,7 @@ def main():
     print(f'Il tuo pacco conteneva: {game.boxes[player.box]} €')
     print(f'Guadagno finale: {player.final_gain} €')
     print('A schermo verrà stampato il grafico con l\'andamento della tua partita.')
-    utils.get_game_plot(box_values=game.player_box_history, mean=game.box_history, offers=game.offer_history)
+    utils.get_game_plot(box_values=game.player_box_history, mean=game.box_history, offers=[value['value'] for value in game.offer_history])
     # chiede se vuoi rigiocare
     rematch = input('Vuoi giocare ancora? (s/n)\n').strip().lower()
     if rematch.startswith('s'):
