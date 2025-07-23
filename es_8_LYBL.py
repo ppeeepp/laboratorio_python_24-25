@@ -19,7 +19,7 @@ def load(filepath):
                 return words
 
 def main():
-    words = load('words.json')
+    words = load('Lezioni/words.json')
     if not words:
         return
     # scegliete una parola a caso con cui giocare dalla lista letta, tramite random

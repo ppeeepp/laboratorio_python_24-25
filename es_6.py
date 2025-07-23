@@ -100,7 +100,7 @@ class Rubrica:
 def main():
     # 1 - apertura da file JSON
     try:
-        rubrica_json = Rubrica.open_json('rubrica.json')
+        rubrica_json = Rubrica.open_json('Lezioni/rubrica.json')
         print('Rubrica da JSON aperta correttamente')
     except Exception as e:
         print(f'Errore: {e}')
