@@ -12,7 +12,7 @@ def main_menu():
     print('5 - STAMPA')
     print('0 - EXIT - esci.')
 
-if __name__ == '__main__':
+def main():
     rubrica = None
     # Se l’azione richiesta non esiste, il programma continua a chiedere l’azione da svolgere
     while True:
@@ -74,3 +74,5 @@ if __name__ == '__main__':
                 break
             case _:
                 print('Azione non riconosciuta')
+
+main()

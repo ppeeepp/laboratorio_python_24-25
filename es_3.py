@@ -125,5 +125,5 @@ def options_menu():
         print("Nessuna opzione valida specificata.")
 
 
-if __name__ == '__main__':
-    options_menu()
+
+options_menu()

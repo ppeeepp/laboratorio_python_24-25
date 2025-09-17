@@ -141,5 +141,4 @@ def main():
     rubrica_empty.stampa('Test')
     rubrica_empty.save('empty.txt')
 
-if __name__ == '__main__':
-    main()
+main()

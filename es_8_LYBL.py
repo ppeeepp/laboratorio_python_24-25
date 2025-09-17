@@ -71,5 +71,5 @@ def main():
     else:
         print(f'HAI PERSO - La parola era: {secret_word}')
 
-if __name__ == '__main__':
-    main()
+
+main()

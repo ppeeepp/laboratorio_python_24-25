@@ -3,25 +3,32 @@ import time
 
 # Dalla lezione 7: funzioni stessa_diagonale() e incrocia_colonne()
 def same_diagonal(x0, y0, x1, y1):
-    return abs(x1-x0)-abs(y1-y0)
+    return abs(x1-x0)-abs(y1-y0) == 0           # True se la differenza è 0 => stessa diagonale, False altrimenti
 
 def cross_columns(pos, col):
+    """
+    Ritorna Vero se la colonna 'col', che indica la posizione della regina
+      (col, pos[col]) incrocia la diagonale di qualcuna
+      delle posizioni delle regine precedenti
+    """
     for c in range(col):
         if same_diagonal(c, pos[c], col, pos[col]):
-            return True
-    return False
+            return True     # stessa diagonale -->
+    return False            # nessun incrocio: la posizione della regina non interseca altre regine
 
 def is_valid(pos):
     """
     controlla se una disposizione di regine è valida -> non ci sono coppie sulla stessa diagonale dappertutto
-    :param pos: lista di interi -> l'indice è la riga, il valore (pos[i]) la colonna
+    :param pos: lista di interi = coppie (indice, valore) che identificano la posizione della regina
+                                    -> l'indice è la riga, il valore (pos[i]) la colonna
     :return: True se la disposizione è valida, False altrimenti
     """
-    for i in range(len(pos)):
-        for j in range(i + 1, len(pos)):
+    for i in range(len(pos)):                   # scorro gli indici di riga i della disposizione
+        for j in range(i + 1, len(pos)):        # scorro gli indici succesivi a i --> per ottenere coppie (i,j) con i<j senza duplicati
             if abs(i - j) == abs(pos[i] - pos[j]):
-                return False  # stessa diagonale
+                return False                    # stessa diagonale --> non è valido
     return True
+
 # 1) Trovate 10 soluzioni per il gioco delle regine con il metodo delle permutazioni:
 #     quanto è il tempo medio necessario a trovare una soluzione?
 #     2) Contate quanti tentativi fa il programma per trovare ogni soluzione del problema 8 regine
@@ -37,7 +44,7 @@ def get_10_med_time():
     attempts = 0
     start = time.time()
     while len(solutions)<10:
-        list_of_solutions = list(range(8))
+        list_of_solutions = list(range(8))              # = [0,1,2,3,4,5,6,7] disp. iniziale -> 1 regina per riga, prima dello shuffle
         random_gen.shuffle(list_of_solutions)
         attempts += 1
         if is_valid(list_of_solutions):
@@ -62,12 +69,12 @@ def get_unique_solutions():
     total_attempts = 0
     n_solutions = 10
     while len(unique_solutions) < n_solutions:
-        list_of_solutions = list(range(8))
+        list_of_solutions = list(range(8))              # = [0,1,2,3,4,5,6,7] disp. iniziale -> 1 regina per riga, prima dello shuffle
         random_gen.shuffle(list_of_solutions)
         attempts += 1
         if is_valid(list_of_solutions):
             tuple_of_solutions = tuple(list_of_solutions)   # converto la lista in tupla per poterla aggiungere al set
-            if tuple_of_solutions not in unique_solutions:
+            if tuple_of_solutions not in unique_solutions:  # verifico la nuova tupla non appartenga già alle soluzioni uniche
                 unique_solutions.add(tuple_of_solutions)
                 print(f'Soluzione {len(unique_solutions)} trovata: {list_of_solutions}\nNumero tentativi: {attempts}')
                 total_attempts += attempts
@@ -79,18 +86,18 @@ def count_repetitions():
     """
     Genera migliaia di soluzioni valide, e verifica quante volte vengono ripetute
     """
-    max_attempts = 10000
+    max_attempts = 10000                        # imposto un massimo altrimenti mi esplode il pc
     random_gen = random.Random()
-    repetitions = {}
+    repetitions = {}                            # dizionario che mi servirà per mappare key = soluzione; value = numero ripetizioni
     for attempt in range(max_attempts):
         list_of_solutions = list(range(8))
         random_gen.shuffle(list_of_solutions)
         if is_valid(list_of_solutions):
-            tuple_of_solutions = tuple(list_of_solutions)
+            tuple_of_solutions = tuple(list_of_solutions)       # converto in tupla per poterla utilizzare come key del dizionario
             if tuple_of_solutions in repetitions:
-                repetitions[tuple_of_solutions] += 1
+                repetitions[tuple_of_solutions] += 1            # se è già presente ne aumenta il valore
             else:
-                repetitions[tuple_of_solutions] = 1
+                repetitions[tuple_of_solutions] = 1             # altrimenti crea la key e le assegna valore 1
     return repetitions
 
 # 5) Generalizzate il programma per risolvere una scacchiera di qualunque dimensione NxN
@@ -114,7 +121,7 @@ def get_unique_solutions_nxn(n, n_solutions):
             attempts = 0
             total_attempts = 0
             while len(unique_solutions) < n_solutions:
-                list_of_solutions = list(range(n))
+                list_of_solutions = list(range(n))                  # [0,1,2,...,n-1]
                 random_gen.shuffle(list_of_solutions)
                 attempts += 1
                 if is_valid(list_of_solutions):
@@ -154,10 +161,16 @@ def find_max_n():
 #    Trovate 10 soluzioni uniche e le rispettive simmetriche per una scacchiera 8x8
 # ROTAZIONI
 def rotate_90(solution):
+    """
+    Ritorna una lista rappresentante le posizioni delle regine dopo una rotazione di 90 gradi in senso orario.
+    Dopo una rotazione di 90 gradi, la nuova posizione della regina situata in (row, col) sarà (col, n-1-row)
+    :param solution: lista (indice = riga, valore = colonna): disposizione di regine
+    :return: rotated: lista (indice = riga, valore = colonna): disposizione delle regine dopo una rotazione di 90 gradi
+    """
     n = len(solution)
-    rotated = [0]*n
-    for row, col in enumerate(solution):
-        # dopo rotazione di 90 gradi la regina in (row, col) va in (c, n-1-r)
+    rotated = [0]*n             # nuova lista di rotazioni, inizializzata a [0,0,0,...,0]
+    for row, col in enumerate(solution):        #
+        # dopo rotazione di 90 gradi la regina in (row, col) va in (col, n-1-row)
         rotated[col] = n-1-row
     return rotated
 def get_all_rotations(solution):
@@ -211,12 +224,12 @@ def get_unique_solutions_nxn_and_simmetric(n, n_solutions):
     except Exception as e:
         return f'{e}: Parametro/i non valido/i!'
 
-if __name__ == '__main__':
-    #get_10_med_time()
-    #print(get_unique_solutions())
-    #print(count_repetitions())
-    #print(get_unique_solutions_nxn(15, 10))
-    #print(find_max_n())
-    #print(get_unique_solutions_nxn_and_simmetric(8, 10))
-    print()
+
+#get_10_med_time()
+#print(get_unique_solutions())
+#print(count_repetitions())
+#print(get_unique_solutions_nxn(15, 10))
+#print(find_max_n())
+#print(get_unique_solutions_nxn_and_simmetric(8, 10))
+print()
 

@@ -56,7 +56,7 @@ def odd_words_uppercase(text):
         [
         ' '.join(
             [word.upper() if i%2==0
-             else word for i, word in enumerate(line.split())
+             else word for i, word in enumerate(line.split())       # enumerate mi serve per poter iterare sulla sequenza restituendo coppie indice-valore
             ])
             for line in text.split('\n')
         ])
@@ -67,7 +67,7 @@ def invert_second_line(text):
     inverted = []               # lista delle stringhe invertite
     for strophe in strophes:
         lines = strophe.strip().split('\n')
-        lines[1] = lines[1][::-1]   # inverto la seconda riga di ogni strofa
+        lines[1] = lines[1][::-1]   # inverto la seconda riga di ogni strofa -> [start:stop:step] -> step = -1 -> la scorro al contrario
         inverted.append('\n'.join(lines))
     return '\n\n'.join(inverted)
 
@@ -107,14 +107,12 @@ def char_frequency(text):
 def letters_frequency(text):
     return {char: text.lower().count(char) for char in set(text) if char.isalpha()}
 
-if __name__ == '__main__':
-    #print(count_effective_rows(testo))
-    #print(word_count(testo))
-    #print(count_chars(testo))
-    #print(replace_words(testo))
-    #print(invert_second_line(testo))
-    #print(word_in_every_strophe(testo))
-    #print(sort_by_length(testo))
-    #print(char_frequency(testo))
-    #print(letters_frequency(testo))
-    print()
+#print(count_effective_rows(testo))
+#print(word_count(testo))
+#print(count_chars(testo))
+#print(replace_words(testo))
+print(invert_second_line(testo))
+#print(word_in_every_strophe(testo))
+#print(sort_by_length(testo))
+#print(char_frequency(testo))
+#print(letters_frequency(testo))

@@ -116,11 +116,9 @@ def spiral(turtle_name):
     dim = dim*1.5
 
 
-#main
-if __name__ == '__main__':
-    window = make_window("lightgreen", "Turtle Program")
-    t = make_turtle('blue', 3)
-    init(t, 0, 0)
-    spiral(t)
+window = make_window("lightgreen", "Turtle Program")
+t = make_turtle('blue', 3)
+init(t, 0, 0)
+spiral(t)
 
-    window.mainloop()
+window.mainloop()

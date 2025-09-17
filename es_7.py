@@ -161,8 +161,8 @@ def main():
     integ.plot_3_moments()
     integ.plot_over_soglia()
 
-if __name__ == '__main__':
-    main()
+
+main()
 
 
 

@@ -24,10 +24,10 @@ def read_json(filename):
     except json.JSONDecodeError:
         print(f'Il file {filename} non è un JSON valido')
 
-if __name__ == '__main__':
-    export_to_txt(rubrica, 'Lezioni/rubrica.txt')
-    export_to_json(rubrica, 'Lezioni/rubrica.json')
-    read_json('Lezioni/rubrica.json')
+
+export_to_txt(rubrica, 'Lezioni/rubrica.txt')
+export_to_json(rubrica, 'Lezioni/rubrica.json')
+read_json('Lezioni/rubrica.json')
 
 
 
